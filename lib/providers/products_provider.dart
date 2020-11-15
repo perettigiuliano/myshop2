@@ -41,8 +41,8 @@ class ProductsProvider with ChangeNotifier {
     return [..._products];
   }
 
-  addProductFromDetails(String id, String title, String description, String imageUrl,
-      double price) {
+  addProductFromDetails(String id, String title, String description,
+      String imageUrl, double price) {
     Product tmp = new Product(
         id: id,
         title: title,
@@ -55,5 +55,9 @@ class ProductsProvider with ChangeNotifier {
   addProduct(Product prd) {
     _products.add(prd);
     notifyListeners();
+  }
+
+  Product findById(String id) {
+    return this._products.firstWhere((element) => element.id == id);
   }
 }

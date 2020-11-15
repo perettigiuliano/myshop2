@@ -13,7 +13,7 @@ class ProductesGrid extends StatelessWidget {
       itemCount: products.length,
       padding: const EdgeInsets.all(10.0),
       itemBuilder: (context, index) {
-        return ProductItem(products[index]);
+        return ProductItem(products[index].id);
       },
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
