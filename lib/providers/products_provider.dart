@@ -37,8 +37,14 @@ class ProductsProvider with ChangeNotifier {
     ),
   ];
 
+  var showFavoritesOnly = false;
+
   List<Product> get products {
     return [..._products];
+  }
+
+  List<Product> get favorites {
+    return _products.where((element) => element.isFavorite).toList();
   }
 
   addProductFromDetails(String id, String title, String description,
