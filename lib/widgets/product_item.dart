@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop2/providers/cart.dart';
 import 'package:myshop2/providers/product.dart';
 import 'package:myshop2/screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +45,6 @@ class ProductItem extends StatelessWidget {
                 trailing: IconButton(
                     icon: Icon(Icons.shopping_cart),
                     onPressed: () {
-                      
                     },
                     color: Theme.of(context).accentColor),
               ));

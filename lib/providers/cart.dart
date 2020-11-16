@@ -22,12 +22,22 @@ class Cart with ChangeNotifier {
 
   void addItem(String id, String title, double price) {
     if (_items.containsKey(id)) {
-      _items.update(id, (value) => CartItem(id: value.id, title: value.title, quantity: value.quantity + 1, price: value.price))
+      _items.update(
+          id,
+          (value) => CartItem(
+              id: value.id,
+              title: value.title,
+              quantity: value.quantity + 1,
+              price: value.price));
     } else {
       _items.putIfAbsent(
           id,
-          () =>
-              CartItem(id: DateTime.now().toString(), title: title, quantity: 1, price: price));
+          () => CartItem(
+              id: DateTime.now().toString(),
+              title: title,
+              quantity: 1,
+              price: price));
     }
+    notifyListeners();
   }
 }
