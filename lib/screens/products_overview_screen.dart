@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myshop2/providers/cart.dart';
+import 'package:myshop2/widgets/badge.dart';
 // import 'package:myshop2/providers/products_provider.dart';
 import 'package:myshop2/widgets/products_grid.dart';
 import 'package:provider/provider.dart';
@@ -14,16 +15,27 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   bool _showOnlyFavorites = false;
-  // final Cart cart = Provider.of<Cart>(context);
   @override
   Widget build(BuildContext context) {
+    // final Cart cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("MyShop"),
         actions: [
-          IconButton(icon: Icon(Icons.shopping_cart), onPressed: () {
-            // TODO: Show cart screen
-          },),
+          Consumer<Cart>(
+            builder: (BuildContext context, cart, Widget child) {
+              return Badge(
+                value: cart.quantity.toString(),
+                child: child,
+              );
+            },
+            child: IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    // TODO: Show cart screen
+                  },
+                ),
+          ),
           PopupMenuButton(
             onSelected: (FilterOptions value) {
               setState(() {

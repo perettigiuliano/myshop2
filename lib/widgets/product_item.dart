@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<Cart>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Consumer<Product>(
@@ -45,6 +46,7 @@ class ProductItem extends StatelessWidget {
                 trailing: IconButton(
                     icon: Icon(Icons.shopping_cart),
                     onPressed: () {
+                      cart.addItem(product.id, product.title, product.price);
                     },
                     color: Theme.of(context).accentColor),
               ));
