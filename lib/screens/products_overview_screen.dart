@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myshop2/providers/cart.dart';
+import 'package:myshop2/screens/cart_screen.dart';
 import 'package:myshop2/widgets/badge.dart';
 // import 'package:myshop2/providers/products_provider.dart';
 import 'package:myshop2/widgets/products_grid.dart';
@@ -30,11 +31,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               );
             },
             child: IconButton(
-                  icon: Icon(Icons.shopping_cart),
-                  onPressed: () {
-                    // TODO: Show cart screen
-                  },
-                ),
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.ROUTE);
+              },
+            ),
           ),
           PopupMenuButton(
             onSelected: (FilterOptions value) {
