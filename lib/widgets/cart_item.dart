@@ -10,14 +10,26 @@ class CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(margin: EdgeInsets.symmetric(
-      horizontal: 15,
-      vertical: 4),
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: ListTile(
-          leading: CircleAvatar(child: Text("€${this._price}", style: TextStyle(fontSize: 12),), radius: 40,),
-          title: this._quantity == 1? Text(this._title) : Text(this._title + " (x" + this._quantity.toString() + ")"),
-          subtitle: Text("Total: €${this._price * this._quantity}"),),));
+    return Card(
+        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+        child: Padding(
+          padding: EdgeInsets.all(8),
+          child: ListTile(
+            leading: CircleAvatar(
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: FittedBox(
+                    child: Text(
+                  "€${this._price}",
+                )),
+              ),
+              radius: 40,
+            ),
+            title: this._quantity == 1
+                ? Text(this._title)
+                : Text(this._title + " (x" + this._quantity.toString() + ")"),
+            subtitle: Text("Total: €${this._price * this._quantity}"),
+          ),
+        ));
   }
 }

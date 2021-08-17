@@ -11,12 +11,11 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(providers: [
-      ChangeNotifierProvider(
-      create: (_) => ProductsProvider()),
-      ChangeNotifierProvider(
-      create: (_) => Cart()),
-    ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductsProvider()),
+        ChangeNotifierProvider(create: (_) => Cart()),
+      ],
       child: MaterialApp(
         title: 'MyShop',
         theme: ThemeData(
@@ -24,8 +23,10 @@ class MyApp extends StatelessWidget {
             accentColor: Colors.deepOrange,
             fontFamily: "Lato"),
         home: ProductOverviewScreen(),
-        routes: {ProductDetailScreen.ROUTE: (ctx) => ProductDetailScreen(),
-        CartScreen.ROUTE: (ctx)=> CartScreen()},
+        routes: {
+          ProductDetailScreen.ROUTE: (ctx) => ProductDetailScreen(),
+          CartScreen.ROUTE: (ctx) => CartScreen()
+        },
       ),
     );
   }
