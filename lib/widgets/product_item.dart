@@ -29,8 +29,11 @@ class ProductItem extends StatelessWidget {
                           fontWeight: FontWeight.bold)),
                   backgroundColor: Color.fromARGB(100, 0, 0, 0)),
               footer: GridTileBar(
-                title: Text("€ " + product.price.toString(),
-                    textAlign: TextAlign.center),
+                title: Text(
+                  "€ " + product.price.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12),
+                ),
                 backgroundColor: Color.fromARGB(180, 0, 0, 0),
                 leading: IconButton(
                   icon: product.isFavorite
