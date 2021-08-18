@@ -32,7 +32,7 @@ class ProductItem extends StatelessWidget {
                 title: Text(
                   "€ " + product.price.toString(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 14),
                 ),
                 backgroundColor: Color.fromARGB(180, 0, 0, 0),
                 leading: IconButton(
