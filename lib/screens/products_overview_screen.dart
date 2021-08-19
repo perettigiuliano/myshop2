@@ -22,7 +22,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
     // final Cart cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("MyShop"),
+        title: Text("Shoppissimo"),
         actions: [
           Consumer<Cart>(
             builder: (BuildContext context, cart, Widget child) {

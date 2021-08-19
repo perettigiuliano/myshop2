@@ -11,6 +11,14 @@ class CartScreen extends StatelessWidget {
     final cart = Provider.of<Cart>(context);
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.red,
+        child: Icon(Icons.delete),
+        onPressed: () {
+          cart.clear;
+        },
+        splashColor: Colors.yellow,
+      ),
       appBar: AppBar(
         title: Text("Your cart"),
       ),
