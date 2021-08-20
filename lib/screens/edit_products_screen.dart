@@ -14,6 +14,19 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
       appBar: AppBar(
         title: Text("Edit"),
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          child: ListView(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(labelText: "Title"),
+                textInputAction: TextInputAction.next,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
