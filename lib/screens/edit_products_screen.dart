@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myshop2/providers/product.dart';
+import 'package:myshop2/widgets/product_item.dart';
 
 class EditProductsScreen extends StatefulWidget {
   static const String ROUTE = "/edit-product";
@@ -13,6 +15,15 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   // final _descriptionFocusNode = FocusNode();
   final _imageURLFocusNode = FocusNode();
   final _imageURLController = TextEditingController();
+  final _form = GlobalKey<FormState>();
+  var _newProd = Product(
+    id: null,
+    description: "",
+    imageUrl: "",
+    price: 0.0,
+    title: "",
+    isFavorite: false,
+  );
 
   @override
   void initState() {
@@ -38,15 +49,25 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     super.dispose();
   }
 
+  void _saveForm() {
+    _form.currentState.save();
+    print(_newProd.title);
+    print(_newProd.description);
+    print(_newProd.price);
+    print(_newProd.imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit"),
+        actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
+          key: _form,
           child: ListView(
             children: [
               TextFormField(
@@ -55,6 +76,15 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 // onFieldSubmitted: (value) {
                 //   FocusScope.of(context).requestFocus(_priceFocusNode);
                 // },
+                onSaved: (newValue) {
+                  _newProd = Product(
+                      title: newValue,
+                      description: _newProd.description,
+                      id: _newProd.id,
+                      imageUrl: _newProd.imageUrl,
+                      price: _newProd.price,
+                      isFavorite: _newProd.isFavorite);
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "Price"),
@@ -64,12 +94,30 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 // onFieldSubmitted: (value) {
                 //   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 // },
+                onSaved: (newValue) {
+                  _newProd = Product(
+                      title: _newProd.title,
+                      description: _newProd.description,
+                      id: _newProd.id,
+                      imageUrl: _newProd.imageUrl,
+                      price: double.parse(newValue),
+                      isFavorite: _newProd.isFavorite);
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: "Description"),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 // focusNode: _descriptionFocusNode,
+                onSaved: (newValue) {
+                  _newProd = Product(
+                      title: _newProd.title,
+                      description: newValue,
+                      id: _newProd.id,
+                      imageUrl: _newProd.imageUrl,
+                      price: _newProd.price,
+                      isFavorite: _newProd.isFavorite);
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -100,6 +148,18 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                         setState(() {});
                       },
                       focusNode: _imageURLFocusNode,
+                      onFieldSubmitted: (value) {
+                        _saveForm();
+                      },
+                      onSaved: (newValue) {
+                        _newProd = Product(
+                            title: _newProd.title,
+                            description: _newProd.description,
+                            id: _newProd.id,
+                            imageUrl: newValue,
+                            price: _newProd.price,
+                            isFavorite: _newProd.isFavorite);
+                      },
                     ),
                   )
                 ],
