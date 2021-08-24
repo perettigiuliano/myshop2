@@ -59,7 +59,14 @@ class ProductsProvider with ChangeNotifier {
   }
 
   addProduct(Product prd) {
-    _products.add(prd);
+    final newPord = Product(
+      id: DateTime.now().toString(),
+      title: prd.title,
+      description: prd.description,
+      price: prd.price,
+      imageUrl: prd.imageUrl,
+    );
+    _products.add(newPord);
     notifyListeners();
   }
 
