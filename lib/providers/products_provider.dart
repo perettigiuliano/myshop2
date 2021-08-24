@@ -58,6 +58,15 @@ class ProductsProvider with ChangeNotifier {
     addProduct(tmp);
   }
 
+  void updatePruduct(String id, Product newProd) {
+    final index = _products.indexWhere((element) => element.id == id);
+    if (index < 0) {
+      return;
+    }
+    _products[index] = newProd;
+    notifyListeners();
+  }
+
   addProduct(Product prd) {
     final newPord = Product(
       id: DateTime.now().toString(),
