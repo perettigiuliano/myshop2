@@ -32,8 +32,10 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   }
 
   void _updateImageURL() {
-    if (!_imageURLFocusNode.hasFocus) {
-      setState(() {});
+    if (!_imageURLFocusNode.hasFocus && (_imageURLController.text.length > 0)) {
+      if (_form.currentState.validate()) {
+        setState(() {});
+      }
     }
   }
 
@@ -121,6 +123,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 // focusNode: _descriptionFocusNode,
+                validator: (value) {
+                  return value.isEmpty
+                      ? "Enter a description"
+                      : value.length > 10
+                          ? null
+                          : "Minimum length 10 characters";
+                },
                 onSaved: (newValue) {
                   _newProd = Product(
                       title: _newProd.title,
@@ -152,7 +161,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: "Imgae URL"),
+                      decoration: InputDecoration(labelText: "Image URL"),
                       keyboardType: TextInputType.url,
                       textInputAction: TextInputAction.done,
                       controller: _imageURLController,
@@ -162,6 +171,19 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                       focusNode: _imageURLFocusNode,
                       onFieldSubmitted: (value) {
                         _saveForm();
+                      },
+                      validator: (value) {
+                        RegExp regExp = RegExp(
+                            r"(http|ftp|https)://[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:/~+#-]*[\w@?^=%&amp;/~+#-])?");
+                        if (!regExp.hasMatch(value)) {
+                          return "Invalida URL";
+                        }
+                        if (!value.toUpperCase().endsWith("JPG") &&
+                            !value.toUpperCase().endsWith("PNG") &&
+                            !value.toUpperCase().endsWith("JPEG")) {
+                          return "Must be an image";
+                        }
+                        return null;
                       },
                       onSaved: (newValue) {
                         _newProd = Product(
