@@ -50,11 +50,9 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   }
 
   void _saveForm() {
-    _form.currentState.save();
-    print(_newProd.title);
-    print(_newProd.description);
-    print(_newProd.price);
-    print(_newProd.imageUrl);
+    if (_form.currentState.validate()) {
+      _form.currentState.save();
+    }
   }
 
   @override
@@ -62,7 +60,12 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit"),
-        actions: [IconButton(onPressed: _saveForm, icon: Icon(Icons.save))],
+        actions: [
+          IconButton(
+            onPressed: _saveForm,
+            icon: Icon(Icons.save),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -71,11 +74,16 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: "Title"),
+                decoration: InputDecoration(
+                    labelText: "Title",
+                    errorStyle: TextStyle(color: Colors.red)),
                 textInputAction: TextInputAction.next,
                 // onFieldSubmitted: (value) {
                 //   FocusScope.of(context).requestFocus(_priceFocusNode);
                 // },
+                validator: (value) {
+                  return value.length > 3 ? null : "At least 3 characters";
+                },
                 onSaved: (newValue) {
                   _newProd = Product(
                       title: newValue,
@@ -94,6 +102,10 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                 // onFieldSubmitted: (value) {
                 //   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 // },
+                validator: (value) {
+                  double tmp = double.tryParse(value);
+                  return tmp == null ? "Wrong price value" : null;
+                },
                 onSaved: (newValue) {
                   _newProd = Product(
                       title: _newProd.title,
