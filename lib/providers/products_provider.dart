@@ -73,27 +73,29 @@ class ProductsProvider with ChangeNotifier {
   addProduct(Product prd) {
     final url = Uri.parse(
         "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-    http.post(url,
-        body: jsonEncode(
-          {
-            "title": prd.title,
-            "description": prd.description,
-            "id": prd.id,
-            "imageUrl": prd.imageUrl,
-            "isFavorite": prd.isFavorite,
-            "price": prd.price,
-          },
-        ));
-
-    final newPord = Product(
-      id: DateTime.now().toString(),
-      title: prd.title,
-      description: prd.description,
-      price: prd.price,
-      imageUrl: prd.imageUrl,
-    );
-    _products.add(newPord);
-    notifyListeners();
+    http
+        .post(url,
+            body: jsonEncode(
+              {
+                "title": prd.title,
+                "description": prd.description,
+                // "id": prd.id,
+                "imageUrl": prd.imageUrl,
+                "isFavorite": prd.isFavorite,
+                "price": prd.price,
+              },
+            ))
+        .then((value) {
+      final newPord = Product(
+        id: jsonDecode(value.body)["name"],
+        title: prd.title,
+        description: prd.description,
+        price: prd.price,
+        imageUrl: prd.imageUrl,
+      );
+      _products.add(newPord);
+      notifyListeners();
+    });
   }
 
   void deleteProduct(String id) {
