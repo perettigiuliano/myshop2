@@ -70,10 +70,10 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  addProduct(Product prd) {
+  Future<void> addProduct(Product prd) {
     final url = Uri.parse(
         "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-    http
+    return http
         .post(url,
             body: jsonEncode(
               {
