@@ -1,4 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import 'package:myshop2/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
@@ -68,6 +71,20 @@ class ProductsProvider with ChangeNotifier {
   }
 
   addProduct(Product prd) {
+    final url = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+    http.post(url,
+        body: jsonEncode(
+          {
+            "title": prd.title,
+            "description": prd.description,
+            "id": prd.id,
+            "imageUrl": prd.imageUrl,
+            "isFavorite": prd.isFavorite,
+            "price": prd.price,
+          },
+        ));
+
     final newPord = Product(
       id: DateTime.now().toString(),
       title: prd.title,
