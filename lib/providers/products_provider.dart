@@ -70,23 +70,22 @@ class ProductsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addProduct(Product prd) {
+  Future<void> addProduct(Product prd) async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-    // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
-    return http
-        .post(url,
-            body: jsonEncode(
-              {
-                "title": prd.title,
-                "description": prd.description,
-                // "id": prd.id,
-                "imageUrl": prd.imageUrl,
-                "isFavorite": prd.isFavorite,
-                "price": prd.price,
-              },
-            ))
-        .then((value) {
+        // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
+    try {
+      final http.Response value = await http.post(url,
+          body: jsonEncode(
+            {
+              "title": prd.title,
+              "description": prd.description,
+              // "id": prd.id,
+              "imageUrl": prd.imageUrl,
+              "isFavorite": prd.isFavorite,
+              "price": prd.price,
+            },
+          ));
       final newPord = Product(
         id: jsonDecode(value.body)["name"],
         title: prd.title,
@@ -96,10 +95,10 @@ class ProductsProvider with ChangeNotifier {
       );
       _products.add(newPord);
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print("Can't add product!!!");
       throw error;
-    });
+    }
   }
 
   void deleteProduct(String id) {
