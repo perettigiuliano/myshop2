@@ -73,6 +73,7 @@ class ProductsProvider with ChangeNotifier {
   Future<void> addProduct(Product prd) {
     final url = Uri.parse(
         "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+    // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
     return http
         .post(url,
             body: jsonEncode(
@@ -95,6 +96,9 @@ class ProductsProvider with ChangeNotifier {
       );
       _products.add(newPord);
       notifyListeners();
+    }).catchError((error) {
+      print("Can't add product!!!");
+      throw error;
     });
   }
 
