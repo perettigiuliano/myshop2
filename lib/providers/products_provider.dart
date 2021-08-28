@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:myshop2/models/http_exception.dart';
 import 'dart:convert';
 
 import 'package:myshop2/providers/product.dart';
@@ -115,20 +116,22 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) {
+  Future<void> deleteProduct(String id) async {
     var urlDelete = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+        // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id");
     final index = _products.indexWhere((element) => element.id == id);
     var element = _products[index];
     this._products.removeAt(index);
     notifyListeners();
-    http.delete(urlDelete).then((value) {
-      if (value.statusCode >= 400) {}
-      element = null;
-    }).catchError((value) {
+    final http.Response response = await http.delete(urlDelete);
+    if (response.statusCode >= 400) {
       _products.insert(index, element);
       notifyListeners();
-    });
+      throw HttpException("Can't delete!!!");
+    } else {
+      element = null;
+    }
   }
 
   Future<void> fetchAndSetProduct() async {
