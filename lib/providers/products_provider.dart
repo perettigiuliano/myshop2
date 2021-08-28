@@ -7,7 +7,6 @@ import 'package:myshop2/providers/product.dart';
 class ProductsProvider with ChangeNotifier {
   final url = Uri.parse(
       "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-  // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
 
   List<Product> _products = [
     Product(
@@ -65,11 +64,26 @@ class ProductsProvider with ChangeNotifier {
     addProduct(tmp);
   }
 
-  void updatePruduct(String id, Product newProd) {
+  Future<void> updatePruduct(String id, Product newProd) async {
     final index = _products.indexWhere((element) => element.id == id);
     if (index < 0) {
       return;
     }
+    var urlUpdate = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+    try {
+      http.Response response = await http.patch(urlUpdate,
+          body: jsonEncode({
+            "title": newProd.title,
+            "description": newProd.description,
+            "imageUrl": newProd.imageUrl,
+            "price": newProd.price,
+          }));
+      print(response.body);
+    } catch (error) {
+      print(error);
+    }
+
     _products[index] = newProd;
     notifyListeners();
   }
@@ -81,7 +95,6 @@ class ProductsProvider with ChangeNotifier {
             {
               "title": prd.title,
               "description": prd.description,
-              // "id": prd.id,
               "imageUrl": prd.imageUrl,
               "isFavorite": prd.isFavorite,
               "price": prd.price,
@@ -112,13 +125,19 @@ class ProductsProvider with ChangeNotifier {
       http.Response response = await http.get(url);
       var x = jsonDecode(response.body) as Map<String, dynamic>;
       x.forEach((prodId, prodData) {
-        _products.add(new Product(
+        var index = _products.indexWhere((element) {
+          return element.id == prodId;
+        });
+        Product newProd = new Product(
             id: prodId,
             title: prodData["title"],
             description: prodData["description"],
             price: prodData["price"],
             imageUrl: prodData["imageUrl"],
-            isFavorite: prodData["isFavorite"]));
+            isFavorite: prodData["isFavorite"]);
+        if (index < 0) {
+          _products.add(newProd);
+        }
       });
       notifyListeners();
     } catch (error) {
