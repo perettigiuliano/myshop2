@@ -5,6 +5,10 @@ import 'dart:convert';
 import 'package:myshop2/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
+  final url = Uri.parse(
+      "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+  // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
+
   List<Product> _products = [
     Product(
       id: 'p1',
@@ -71,9 +75,6 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product prd) async {
-    final url = Uri.parse(
-        // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products");
     try {
       final http.Response value = await http.post(url,
           body: jsonEncode(
@@ -104,6 +105,25 @@ class ProductsProvider with ChangeNotifier {
   void deleteProduct(String id) {
     this._products.removeWhere((element) => element.id == id);
     notifyListeners();
+  }
+
+  Future<void> fetchAndSetProduct() async {
+    try {
+      http.Response response = await http.get(url);
+      var x = jsonDecode(response.body) as Map<String, dynamic>;
+      x.forEach((prodId, prodData) {
+        _products.add(new Product(
+            id: prodId,
+            title: prodData["title"],
+            description: prodData["description"],
+            price: prodData["price"],
+            imageUrl: prodData["imageUrl"],
+            isFavorite: prodData["isFavorite"]));
+      });
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 
   Product findById(String id) {
