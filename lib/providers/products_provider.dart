@@ -116,8 +116,19 @@ class ProductsProvider with ChangeNotifier {
   }
 
   void deleteProduct(String id) {
-    this._products.removeWhere((element) => element.id == id);
+    var urlDelete = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+    final index = _products.indexWhere((element) => element.id == id);
+    var element = _products[index];
+    this._products.removeAt(index);
     notifyListeners();
+    http.delete(urlDelete).then((value) {
+      if (value.statusCode >= 400) {}
+      element = null;
+    }).catchError((value) {
+      _products.insert(index, element);
+      notifyListeners();
+    });
   }
 
   Future<void> fetchAndSetProduct() async {
