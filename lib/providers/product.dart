@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:myshop2/models/http_exception.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -14,10 +18,30 @@ class Product with ChangeNotifier {
       @required this.description,
       @required this.price,
       @required this.imageUrl,
-      this.isFavorite = false}) {}
+      this.isFavorite = false});
 
-  toggleFavorite() {
+  void _rollbackFavorite(bool oldValue) {
+    isFavorite = oldValue;
+    notifyListeners();
+  }
+
+  Future<void> toggleFavorite() async {
+    var urlUpdate = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+    var tmp = isFavorite;
     this.isFavorite = !this.isFavorite;
     notifyListeners();
+    try {
+      http.Response response = await http.patch(urlUpdate,
+          body: jsonEncode({
+            "isFavorite": isFavorite,
+          }));
+      if (response.statusCode >= 400) {
+        _rollbackFavorite(tmp);
+        throw HttpException("Can't change favorite");
+      }
+    } catch (error) {
+      _rollbackFavorite(tmp);
+    }
   }
 }

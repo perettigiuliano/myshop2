@@ -118,8 +118,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     var urlDelete = Uri.parse(
-        // "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
     final index = _products.indexWhere((element) => element.id == id);
     var element = _products[index];
     this._products.removeAt(index);
