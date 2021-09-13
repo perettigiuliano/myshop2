@@ -79,9 +79,9 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     // _priceFocusNode.dispose();
     // _descriptionFocusNode.dispose();
     // _descriptionFocusNode.dispose();
+    _imageURLFocusNode.removeListener(_updateImageURL);
     _imageURLFocusNode.dispose();
     _imageURLController.dispose();
-    _imageURLFocusNode.removeListener(_updateImageURL);
     _imageURLFocusNode.dispose();
     super.dispose();
   }
