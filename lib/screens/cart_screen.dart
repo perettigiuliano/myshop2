@@ -105,7 +105,6 @@ class _OrderButtonState extends State<OrderButton> {
               });
               widget.cart.clear;
             },
-      // textColor: Theme.of(context).primaryColor,
     );
   }
 }

@@ -137,6 +137,9 @@ class ProductsProvider with ChangeNotifier {
     try {
       http.Response response = await http.get(url);
       var x = jsonDecode(response.body) as Map<String, dynamic>;
+      if (x == null) {
+        return null;
+      }
       x.forEach((prodId, prodData) {
         var index = _products.indexWhere((element) {
           return element.id == prodId;

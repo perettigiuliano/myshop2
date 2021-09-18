@@ -25,6 +25,34 @@ class Orders with ChangeNotifier {
     return [..._orderItems];
   }
 
+  Future<void> fetchAndSetOrders() async {
+    final url = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json");
+    final http.Response response = await http.get(url);
+    final List<OrderItem> fetched = [];
+    final decodedData = jsonDecode(response.body) as Map<String, dynamic>;
+    if (decodedData == null) {
+      return null;
+    }
+    decodedData.forEach((key, value) {
+      fetched.add(OrderItem(
+        id: key,
+        amount: value["amount"],
+        products: (value["products"] as List<dynamic>)
+            .map((item) => CartItem(
+                  id: item["id"],
+                  title: item["title"],
+                  quantity: item["quantity"],
+                  price: item["price"],
+                ))
+            .toList(),
+        dateTime: DateTime.parse(value["dateTime"]),
+      ));
+    });
+    _orderItems = fetched.reversed.toList();
+    notifyListeners();
+  }
+
   Future<void> addOrder(List<CartItem> items, double total) async {
     final url = Uri.parse(
         "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json");
