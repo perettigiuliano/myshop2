@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myshop2/providers/cart.dart';
 import 'package:myshop2/providers/orders.dart';
+import 'package:myshop2/screens/auth_screen.dart';
 import 'package:myshop2/screens/cart_screen.dart';
 import 'package:myshop2/screens/edit_products_screen.dart';
 import 'package:myshop2/screens/orders_screen.dart';
@@ -22,18 +23,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Orders()),
       ],
       child: MaterialApp(
-        title: 'MyShop',
+        title: 'Shoppissimo',
         theme: ThemeData(
             primarySwatch: Colors.purple,
             accentColor: Colors.deepOrange,
             fontFamily: "Lato"),
-        home: ProductOverviewScreen(),
+        home: AuthScreen(),
         routes: {
           ProductDetailScreen.ROUTE: (ctx) => ProductDetailScreen(),
           CartScreen.ROUTE: (ctx) => CartScreen(),
           OrdersScreen.ROUTE: (ctx) => OrdersScreen(),
           UserProductsScreen.ROUTE: (ctx) => UserProductsScreen(),
           EditProductsScreen.ROUTE: (ctx) => EditProductsScreen(),
+          AuthScreen.ROUTE: (ctx) => AuthScreen(),
         },
       ),
     );
