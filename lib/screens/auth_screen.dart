@@ -134,14 +134,17 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   void _switchAuthMode() {
-    if (_authMode == AuthMode.Login) {
-      setState(() {
-        _authMode = AuthMode.Signup;
-      });
-    } else {
-      setState(() {
-        _authMode = AuthMode.Login;
-      });
+    switch (_authMode) {
+      case AuthMode.Login:
+        setState(() {
+          _authMode = AuthMode.Signup;
+        });
+        break;
+      case AuthMode.Signup:
+        setState(() {
+          _authMode = AuthMode.Login;
+        });
+        break;
     }
   }
 
