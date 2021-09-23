@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:myshop2/models/http_exception.dart';
 import 'package:myshop2/providers/auth.dart';
+import 'package:myshop2/screens/product_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
@@ -104,6 +106,29 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _ShowDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            "Something went wrong",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Ok"),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -113,24 +138,67 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-
-    switch (_authMode) {
-      case AuthMode.Login:
-        await Provider.of<Auth>(context, listen: false).signIn(
-          _authData["email"],
-          _authData["password"],
-        );
-        break;
-      case AuthMode.Signup:
-        await Provider.of<Auth>(context, listen: false).signUp(
-          _authData["email"],
-          _authData["password"],
-        );
-        break;
+    var errorMessage = "";
+    try {
+      switch (_authMode) {
+        case AuthMode.Login:
+          await Provider.of<Auth>(context, listen: false).signIn(
+            _authData["email"],
+            _authData["password"],
+          );
+          break;
+        case AuthMode.Signup:
+          await Provider.of<Auth>(context, listen: false).signUp(
+            _authData["email"],
+            _authData["password"],
+          );
+          break;
+      }
+    } on HttpException catch (error) {
+      errorMessage =
+          (_authMode == AuthMode.Login ? "Login failed" : "SignUp failed");
+      switch (_authMode) {
+        case AuthMode.Signup:
+          if (error.toString().contains("EMAIL_EXISTS")) {
+            errorMessage =
+                "The email address is already in use by another account";
+          }
+          if (error.toString().contains("OPERATION_NOT_ALLOWED")) {
+            errorMessage = "Password sign-in is disabled for this project";
+          }
+          if (error.toString().contains("TOO_MANY_ATTEMPTS_TRY_LATER")) {
+            errorMessage =
+                "We have blocked all requests from this device due to unusual activity. Try again later";
+          }
+          break;
+        case AuthMode.Login:
+          if (error.toString().contains("EMAIL_NOT_FOUND")) {
+            errorMessage =
+                "There is no user record corresponding to this identifier. The user may have been deleted";
+          }
+          if (error.toString().contains("INVALID_PASSWORD")) {
+            errorMessage =
+                "The password is invalid or the user does not have a password";
+          }
+          if (error.toString().contains("USER_DISABLED")) {
+            errorMessage =
+                "The user account has been disabled by an administrator";
+          }
+          if (error.toString().contains("TOO_MANY_ATTEMPTS_TRY_LATER")) {
+            errorMessage =
+                "We have blocked all requests from this device due to unusual activity. Try again later";
+          }
+          break;
+      }
+    } catch (error) {
+      errorMessage = "Could not authenticate";
     }
     setState(() {
       _isLoading = false;
     });
+    if (errorMessage.length > 0) {
+      _ShowDialog(errorMessage);
+    }
   }
 
   void _switchAuthMode() {

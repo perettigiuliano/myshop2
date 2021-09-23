@@ -18,28 +18,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProvider(create: (_) => ProductsProvider()),
-        ChangeNotifierProvider(create: (_) => Cart()),
-        ChangeNotifierProvider(create: (_) => Orders()),
-      ],
-      child: MaterialApp(
-        title: 'Shoppissimo',
-        theme: ThemeData(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
-            fontFamily: "Lato"),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailScreen.ROUTE: (ctx) => ProductDetailScreen(),
-          CartScreen.ROUTE: (ctx) => CartScreen(),
-          OrdersScreen.ROUTE: (ctx) => OrdersScreen(),
-          UserProductsScreen.ROUTE: (ctx) => UserProductsScreen(),
-          EditProductsScreen.ROUTE: (ctx) => EditProductsScreen(),
-          AuthScreen.ROUTE: (ctx) => AuthScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: (_) => Auth()),
+          // ChangeNotifierProvider(create: (_) => ProductsProvider()),
+          ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+            update: (context, value, previous) => ProductsProvider(
+                value.token, previous == null ? [] : previous.products),
+          ),
+          ChangeNotifierProvider(create: (_) => Cart()),
+          ChangeNotifierProvider(create: (_) => Orders()),
+        ],
+        child: Consumer<Auth>(
+          builder: (context, value, child) {
+            return MaterialApp(
+              title: 'Shoppissimo',
+              theme: ThemeData(
+                  primarySwatch: Colors.purple,
+                  accentColor: Colors.deepOrange,
+                  fontFamily: "Lato"),
+              home: value.isAuth ? ProductOverviewScreen() : AuthScreen(),
+              routes: {
+                ProductDetailScreen.ROUTE: (ctx) => ProductDetailScreen(),
+                CartScreen.ROUTE: (ctx) => CartScreen(),
+                OrdersScreen.ROUTE: (ctx) => OrdersScreen(),
+                UserProductsScreen.ROUTE: (ctx) => UserProductsScreen(),
+                EditProductsScreen.ROUTE: (ctx) => EditProductsScreen(),
+                AuthScreen.ROUTE: (ctx) => AuthScreen(),
+              },
+            );
+          },
+        ));
   }
 }

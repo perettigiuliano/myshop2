@@ -6,9 +6,6 @@ import 'dart:convert';
 import 'package:myshop2/providers/product.dart';
 
 class ProductsProvider with ChangeNotifier {
-  final url = Uri.parse(
-      "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
-
   List<Product> _products = [
     Product(
       id: 'p1',
@@ -45,6 +42,9 @@ class ProductsProvider with ChangeNotifier {
   ];
 
   var showFavoritesOnly = false;
+  final String token;
+
+  ProductsProvider(this.token, this._products);
 
   List<Product> get products {
     return [..._products];
@@ -90,6 +90,9 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product prd) async {
+    final url = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+
     try {
       final http.Response value = await http.post(url,
           body: jsonEncode(
@@ -134,6 +137,9 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
+    final url = Uri.parse(
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token");
+
     try {
       http.Response response = await http.get(url);
       var x = jsonDecode(response.body) as Map<String, dynamic>;
