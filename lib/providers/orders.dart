@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:myshop2/providers/cart.dart';
+import 'package:provider/provider.dart';
 
 class OrderItem {
   final String id;
@@ -20,6 +21,9 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orderItems = [];
+  final String token;
+
+  Orders(this.token, this._orderItems);
 
   List<OrderItem> get orders {
     return [..._orderItems];
@@ -27,7 +31,7 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json?auth=$token");
     final http.Response response = await http.get(url);
     final List<OrderItem> fetched = [];
     final decodedData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -55,7 +59,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> items, double total) async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json?auth=$token");
     final time = DateTime.now();
     try {
       final http.Response value = await http.post(url,

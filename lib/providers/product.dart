@@ -25,9 +25,9 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavorite() async {
+  Future<void> toggleFavorite(String token) async {
     var urlUpdate = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$token");
     var tmp = isFavorite;
     this.isFavorite = !this.isFavorite;
     notifyListeners();

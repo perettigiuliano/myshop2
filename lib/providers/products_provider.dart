@@ -71,7 +71,7 @@ class ProductsProvider with ChangeNotifier {
       return;
     }
     var urlUpdate = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$token");
     try {
       http.Response response = await http.patch(urlUpdate,
           body: jsonEncode({
@@ -91,7 +91,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(Product prd) async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token");
 
     try {
       final http.Response value = await http.post(url,
@@ -121,7 +121,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     var urlDelete = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products/$id.json?auth=$token");
     final index = _products.indexWhere((element) => element.id == id);
     var element = _products[index];
     this._products.removeAt(index);
