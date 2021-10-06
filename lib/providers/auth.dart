@@ -25,6 +25,13 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    if (_isValidExpiryDate && (_userID != null)) {
+      return _userID;
+    }
+    return null;
+  }
+
   Future<void> _sign(String action, String email, String password) async {
     Uri url = Uri.parse("https://identitytoolkit.googleapis.com/v1/accounts:" +
         action +

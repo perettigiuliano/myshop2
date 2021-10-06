@@ -43,8 +43,9 @@ class ProductsProvider with ChangeNotifier {
 
   var showFavoritesOnly = false;
   final String token;
+  final String userId;
 
-  ProductsProvider(this.token, this._products);
+  ProductsProvider(this.token, this.userId, this._products);
 
   List<Product> get products {
     return [..._products];
@@ -100,7 +101,6 @@ class ProductsProvider with ChangeNotifier {
               "title": prd.title,
               "description": prd.description,
               "imageUrl": prd.imageUrl,
-              "isFavorite": prd.isFavorite,
               "price": prd.price,
             },
           ));
@@ -137,7 +137,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProduct() async {
-    final url = Uri.parse(
+    var url = Uri.parse(
         "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token");
 
     try {
@@ -146,6 +146,10 @@ class ProductsProvider with ChangeNotifier {
       if (x == null) {
         return null;
       }
+      url = Uri.parse(
+          "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/userFavorites/$userId.json?auth=$token");
+      http.Response responseFav = await http.get(url);
+      var y = jsonDecode(responseFav.body);
       x.forEach((prodId, prodData) {
         var index = _products.indexWhere((element) {
           return element.id == prodId;
@@ -156,7 +160,7 @@ class ProductsProvider with ChangeNotifier {
             description: prodData["description"],
             price: prodData["price"],
             imageUrl: prodData["imageUrl"],
-            isFavorite: prodData["isFavorite"]);
+            isFavorite: y == null ? false : y[prodId] ?? false);
         if (index < 0) {
           _products.add(newProd);
         }
