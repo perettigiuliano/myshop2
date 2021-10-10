@@ -82,7 +82,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
     _imageURLFocusNode.removeListener(_updateImageURL);
     _imageURLFocusNode.dispose();
     _imageURLController.dispose();
-    _imageURLFocusNode.dispose();
     super.dispose();
   }
 

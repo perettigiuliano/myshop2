@@ -102,6 +102,7 @@ class ProductsProvider with ChangeNotifier {
               "description": prd.description,
               "imageUrl": prd.imageUrl,
               "price": prd.price,
+              "creatorId": userId
             },
           ));
       final newPord = Product(
@@ -136,32 +137,37 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchAndSetProduct() async {
-    var url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token");
+  Future<void> fetchAndSetProduct([bool filterByUserId = false]) async {
+    var urlTmp =
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/products.json?auth=$token";
+    if (filterByUserId) {
+      urlTmp += "&orderBy=\"creatorId\"&equalTo=\"$userId\"";
+      _products.clear();
+    }
+    var url = Uri.parse(urlTmp);
 
     try {
       http.Response response = await http.get(url);
-      var x = jsonDecode(response.body) as Map<String, dynamic>;
-      if (x == null) {
+      var prodsData = jsonDecode(response.body) as Map<String, dynamic>;
+      if (prodsData == null) {
         return null;
       }
       url = Uri.parse(
           "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/userFavorites/$userId.json?auth=$token");
       http.Response responseFav = await http.get(url);
-      var y = jsonDecode(responseFav.body);
-      x.forEach((prodId, prodData) {
+      var favsData = jsonDecode(responseFav.body);
+      prodsData.forEach((prodId, prodData) {
         var index = _products.indexWhere((element) {
           return element.id == prodId;
         });
-        Product newProd = new Product(
-            id: prodId,
-            title: prodData["title"],
-            description: prodData["description"],
-            price: prodData["price"],
-            imageUrl: prodData["imageUrl"],
-            isFavorite: y == null ? false : y[prodId] ?? false);
         if (index < 0) {
+          Product newProd = new Product(
+              id: prodId,
+              title: prodData["title"],
+              description: prodData["description"],
+              price: prodData["price"],
+              imageUrl: prodData["imageUrl"],
+              isFavorite: favsData == null ? false : favsData[prodId] ?? false);
           _products.add(newProd);
         }
       });
