@@ -22,8 +22,9 @@ class OrderItem {
 class Orders with ChangeNotifier {
   List<OrderItem> _orderItems = [];
   final String token;
+  final String userID;
 
-  Orders(this.token, this._orderItems);
+  Orders(this.token, this._orderItems, this.userID);
 
   List<OrderItem> get orders {
     return [..._orderItems];
@@ -31,7 +32,7 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchAndSetOrders() async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json?auth=$token");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders/$userID.json?auth=$token");
     final http.Response response = await http.get(url);
     final List<OrderItem> fetched = [];
     final decodedData = jsonDecode(response.body) as Map<String, dynamic>;
@@ -59,7 +60,7 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> items, double total) async {
     final url = Uri.parse(
-        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders.json?auth=$token");
+        "https://shoppissimo-503bb-default-rtdb.europe-west1.firebasedatabase.app/orders/$userID.json?auth=$token");
     final time = DateTime.now();
     try {
       final http.Response value = await http.post(url,
