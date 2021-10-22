@@ -12,33 +12,40 @@ class ProductDetailScreen extends StatelessWidget {
     final product =
         Provider.of<ProductsProvider>(context, listen: false).findById(id);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          product.title,
-          textAlign: TextAlign.center,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Hero(
+      // appBar: AppBar(
+      //   title: Text(
+      //     product.title,
+      //     textAlign: TextAlign.center,
+      //   ),
+      // ),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                product.title,
+                textAlign: TextAlign.center,
+              ),
+              background: Hero(
                 tag: product.id,
                 child: Image.network(
                   product.imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
-              alignment: Alignment.center,
             ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
             SizedBox(
               height: 10,
             ),
             Text(
               "€${product.price}",
               style: TextStyle(color: Colors.grey, fontSize: 20),
+              textAlign: TextAlign.center,
             ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -49,8 +56,11 @@ class ProductDetailScreen extends StatelessWidget {
                 softWrap: true,
               ),
             ),
-          ],
-        ),
+            SizedBox(
+              height: 1000,
+            ),
+          ])),
+        ],
       ),
     );
   }
