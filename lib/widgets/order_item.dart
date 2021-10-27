@@ -50,15 +50,31 @@ class _OrderItemState extends State<OrderItem> {
                       (e) => Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(
-                            e.title,
-                            style: TextStyle(fontSize: 18),
+                          Container(
+                            // decoration: BoxDecoration(color: Colors.black12),
+                            width: 100,
+                            child: Text(
+                              e.title,
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ),
-                          Text("(x" + e.quantity.toString() + ")"),
-                          Text(
-                            formatCurrency.format(e.price),
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
+                          Container(
+                            // decoration: BoxDecoration(color: Colors.black38),
+                            width: 100,
+                            child: Text(
+                              "(x" + e.quantity.toString() + ")",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            // decoration: BoxDecoration(color: Colors.black54),
+                            width: 100,
+                            child: Text(
+                              formatCurrency.format(e.price),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.right,
+                            ),
                           ),
                         ],
                       ),

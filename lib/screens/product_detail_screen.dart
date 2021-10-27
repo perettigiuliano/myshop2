@@ -24,6 +24,7 @@ class ProductDetailScreen extends StatelessWidget {
             expandedHeight: 300,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
               title: Text(
                 product.title,
                 textAlign: TextAlign.center,
